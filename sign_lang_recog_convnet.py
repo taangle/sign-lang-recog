@@ -1,3 +1,9 @@
+'''
+This is the actual network. The directory strings will need
+to be updated according to where you store the data on your
+machine.
+'''
+
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
