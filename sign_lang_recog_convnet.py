@@ -14,12 +14,12 @@ img_width = 150
 img_height = 150
 train_data_directory = 'data/classified/train'
 validation_data_directory = 'data/classified/validation'
-data_size = 338
-validation_size = 24
-batch_size = 24
+data_size = 603
+validation_size = 264
+batch_size = 64
 data_steps_per_epoch = data_size / batch_size
 validation_steps_per_epoch = validation_size / batch_size
-epochs = 4
+epochs = 50
 
 if K.image_data_format() == 'channels_first':
     input_shape = (1, img_width, img_height)
@@ -95,6 +95,6 @@ model.fit_generator(
     validation_steps=validation_steps_per_epoch
 )
 
-model.save_weights('try_2.h5')
+model.save_weights('try_5.h5')
 
 
