@@ -1,2 +1,2 @@
 # Sign language recognition
-This is a WIP. sign_lang_recog_convnet.py contains the actual recoginition network. Any other files are for demo/testing purposes. 300-something images are in this repo, but the full dataset will be stored on our team Drive.
+sign_lang_recog_convnet contains the network that utilizes live data enhancement - with our limited dataset, its accuracy has not gotten very high. mnist_convnet was made to operate on csv files containing a much larger dataset. Within only 10 short epochs, the mnist_convnet is able to reach 90% accuracy.
