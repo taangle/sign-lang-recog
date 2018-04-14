@@ -8,8 +8,8 @@ from sklearn import preprocessing
 
 img_width = 28
 img_height = 28
-train_data_directory = 'data/sign_mnist_train.csv'
-validation_data_directory = 'data/sign_mnist_test.csv'
+train_data_directory = '../data/sign_mnist_train.csv'
+validation_data_directory = '../data/sign_mnist_test.csv'
 batch_size = 24 * 4
 epochs = 10
 
@@ -83,4 +83,4 @@ model.fit(
 
 score = model.evaluate(X_test, y_test, batch_size=batch_size)
 
-model.save_weights('mnist_try_3.h5')
+# model.save_weights('mnist_try_3.h5')
