@@ -10,8 +10,8 @@ img_width = 28
 img_height = 28
 train_data_directory = '../data/sign_mnist_train.csv'
 validation_data_directory = '../data/sign_mnist_test.csv'
-batch_size = 24 * 4
-epochs = 10
+batch_size = 32
+epochs = 100
 
 train = pd.read_csv(train_data_directory).values
 test = pd.read_csv(validation_data_directory).values
@@ -45,34 +45,35 @@ model = Sequential()
 model.add(Conv2D(32, (3, 3), input_shape=input_shape))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(.2))
 
 # first hidden
 model.add(Conv2D(32, (3, 3)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(.3))
 
 # second hidden
 model.add(Conv2D(64, (3, 3)))
 model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(MaxPooling2D(pool_size=(3, 3)))
+model.add(Dropout(.3))
 
 # third hidden
 model.add(Flatten())
 model.add(Dense(64))
 model.add(Activation('relu'))
-model.add(Dropout(.2))
+model.add(Dropout(.5))
 
 # output layer
 model.add(Dense(24))
 model.add(Activation('softmax'))
 
 model.compile(loss='categorical_crossentropy',
-              optimizer='rmsprop',
+              optimizer='adam',
               metrics=['accuracy'])
 
 ##############################################
-
-model.summary()
 
 model.fit(
     X_train,
@@ -81,6 +82,8 @@ model.fit(
     batch_size=batch_size
 )
 
+model.summary()
+
 score = model.evaluate(X_test, y_test, batch_size=batch_size)
 
-# model.save_weights('mnist_try_3.h5')
+model.save_weights('mnist_try_6.h5')
