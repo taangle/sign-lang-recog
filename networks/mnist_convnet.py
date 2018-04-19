@@ -86,4 +86,4 @@ model.summary()
 
 score = model.evaluate(X_test, y_test, batch_size=batch_size)
 
-model.save_weights('mnist_try_6.h5')
+# model.save_weights('mnist_try_6.h5')
