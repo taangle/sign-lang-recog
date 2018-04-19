@@ -1,3 +1,16 @@
+'''
+Author: Trevor Angle
+Commented By: Trevor Angle, Krishna Sannasi
+Created: 4/11/2018
+Last Updated: 4/18/2018
+'''
+
+'''
+This is the actual network. The directory strings will need
+to be updated according to where you store the data on your
+machine.
+'''
+
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
@@ -6,16 +19,20 @@ from keras import backend as K
 import pandas as pd
 from sklearn import preprocessing
 
-img_width = 28
+'''
+global parameters
+'''
+img_width = 28                                             # image parameters
 img_height = 28
 train_data_directory = '../data/sign_mnist_train.csv'
 validation_data_directory = '../data/sign_mnist_test.csv'
-batch_size = 32
-epochs = 100
+batch_size = 32                                            # how many pictures to look at at a time 
+epochs = 100                                               # how many iterations of training on all of the picture
 
-train = pd.read_csv(train_data_directory).values
-test = pd.read_csv(validation_data_directory).values
+train = pd.read_csv(train_data_directory).values           # getting training data
+test = pd.read_csv(validation_data_directory).values       # getting testing data
 
+# coercing data into matricies
 if K.image_data_format() == 'channels_first':
     trainX = train[:, 1:].reshape(train.shape[0], 1, 28, 28).astype('float32')
     testX = test[:, 1:].reshape(test.shape[0], 1, 28, 28).astype('float32')
@@ -25,6 +42,7 @@ else:
     testX = test[:, 1:].reshape(test.shape[0], 28, 28, 1).astype('float32')
     input_shape = (img_width, img_height, 1)
 
+# normalizing data
 X_train = trainX / 255.0
 y_train = train[:, 0]
 # y_train /= 255.0
@@ -33,14 +51,26 @@ X_test = testX / 255.0
 y_test = test[:, 0]
 # y_test /= 255.0
 
+# processes the outputs into binary matricies
+# this is to allow for easy training classification
 lb = preprocessing.LabelBinarizer()
 y_train = lb.fit_transform(y_train)
 y_test = lb.fit_transform(y_test)
 
 ##############################################
 
+# set up a basic neural network
 model = Sequential()
 
+
+'''
+set up layers of neural networks
+
+architecture
+
+32 CONV(3x3) - 32 CONV(3x3) - 64 CONV(3x3) - 64 DENSE - 24 DENSE
+Inputs         HIDDEN                                   OUTPUT
+'''
 # input layer
 model.add(Conv2D(32, (3, 3), input_shape=input_shape))
 model.add(Activation('relu'))
@@ -69,12 +99,14 @@ model.add(Dropout(.5))
 model.add(Dense(24))
 model.add(Activation('softmax'))
 
+# construct neural network with above properties
 model.compile(loss='categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
 
 ##############################################
 
+# trian on training data from above
 model.fit(
     X_train,
     y_train,
@@ -84,6 +116,7 @@ model.fit(
 
 model.summary()
 
+# check model on test data, to check for overfitting
 score = model.evaluate(X_test, y_test, batch_size=batch_size)
 
 # model.save_weights('mnist_try_6.h5')

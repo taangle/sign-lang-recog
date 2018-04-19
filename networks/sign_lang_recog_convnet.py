@@ -1,8 +1,7 @@
 '''
-This is the actual network. The directory strings will need
-to be updated according to where you store the data on your
-machine.
+DO NOT USE, very slow and an older version
 '''
+
 
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
