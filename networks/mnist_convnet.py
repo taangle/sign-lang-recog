@@ -1,17 +1,13 @@
 '''
 Author: Trevor Angle
 Commented By: Trevor Angle, Krishna Sannasi
-Created: 4/11/2018
-Last Updated: 4/18/2018
 '''
 
 '''
-This is the actual network. The directory strings will need
-to be updated according to where you store the data on your
-machine.
+This network uses the mnist dataset from Kaggle. The directory strings will need to be updated according to 
+where you store the data on your machine.
 '''
 
-from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
@@ -22,15 +18,15 @@ from sklearn import preprocessing
 '''
 global parameters
 '''
-img_width = 28                                             # image parameters
+img_width = 28                                              # image parameters
 img_height = 28
 train_data_directory = '../data/sign_mnist_train.csv'
 validation_data_directory = '../data/sign_mnist_test.csv'
-batch_size = 32                                            # how many pictures to look at at a time 
-epochs = 100                                               # how many iterations of training on all of the picture
+batch_size = 64                                             # how many pictures to look at per step
+epochs = 10                                                 # how many times to iterate over all pictures
 
-train = pd.read_csv(train_data_directory).values           # getting training data
-test = pd.read_csv(validation_data_directory).values       # getting testing data
+train = pd.read_csv(train_data_directory).values            # getting training data
+test = pd.read_csv(validation_data_directory).values        # getting testing data
 
 # coercing data into matricies
 if K.image_data_format() == 'channels_first':
@@ -51,7 +47,7 @@ X_test = testX / 255.0
 y_test = test[:, 0]
 # y_test /= 255.0
 
-# processes the outputs into binary matricies
+# processes the outputs into binary matrices
 # this is to allow for easy training classification
 lb = preprocessing.LabelBinarizer()
 y_train = lb.fit_transform(y_train)
@@ -62,11 +58,10 @@ y_test = lb.fit_transform(y_test)
 # set up a basic neural network
 model = Sequential()
 
-
 '''
-set up layers of neural networks
+adding layers
 
-architecture
+architecture:
 
 32 CONV(3x3) - 32 CONV(3x3) - 64 CONV(3x3) - 64 DENSE - 24 DENSE
 Inputs         HIDDEN                                   OUTPUT
@@ -75,19 +70,19 @@ Inputs         HIDDEN                                   OUTPUT
 model.add(Conv2D(32, (3, 3), input_shape=input_shape))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(.2))
+# model.add(Dropout(.2))
 
 # first hidden
 model.add(Conv2D(32, (3, 3)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(.3))
+# model.add(Dropout(.3))
 
 # second hidden
 model.add(Conv2D(64, (3, 3)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(3, 3)))
-model.add(Dropout(.3))
+# model.add(Dropout(.3))
 
 # third hidden
 model.add(Flatten())
@@ -106,7 +101,7 @@ model.compile(loss='categorical_crossentropy',
 
 ##############################################
 
-# trian on training data from above
+# train model on training data
 model.fit(
     X_train,
     y_train,
@@ -116,7 +111,8 @@ model.fit(
 
 model.summary()
 
-# check model on test data, to check for overfitting
+# test model on testing data
 score = model.evaluate(X_test, y_test, batch_size=batch_size)
+print("Final accuracy on test data: %f.2" % score[1])
 
 # model.save_weights('mnist_try_6.h5')
