@@ -18,17 +18,17 @@ from sklearn import preprocessing
 '''
 global parameters
 '''
-img_width = 28                                              # image parameters
+img_width = 28
 img_height = 28
 train_data_directory = '../data/sign_mnist_train.csv'
 validation_data_directory = '../data/sign_mnist_test.csv'
-batch_size = 64                                             # how many pictures to look at per step
-epochs = 10                                                 # how many times to iterate over all pictures
+batch_size = 64
+epochs = 10
 
-train = pd.read_csv(train_data_directory).values            # getting training data
-test = pd.read_csv(validation_data_directory).values        # getting testing data
+train = pd.read_csv(train_data_directory).values
+test = pd.read_csv(validation_data_directory).values
 
-# coercing data into matricies
+# coercing data into matrices
 if K.image_data_format() == 'channels_first':
     trainX = train[:, 1:].reshape(train.shape[0], 1, 28, 28).astype('float32')
     testX = test[:, 1:].reshape(test.shape[0], 1, 28, 28).astype('float32')
@@ -58,18 +58,11 @@ y_test = lb.fit_transform(y_test)
 # set up a basic neural network
 model = Sequential()
 
-'''
-adding layers
-
-architecture:
-
-32 CONV(3x3) - 32 CONV(3x3) - 64 CONV(3x3) - 64 DENSE - 24 DENSE
-Inputs         HIDDEN                                   OUTPUT
-'''
 # input layer
 model.add(Conv2D(32, (3, 3), input_shape=input_shape))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+# uncomment the dropout layers to slow the learning but reduce overfitting
 # model.add(Dropout(.2))
 
 # first hidden
@@ -94,12 +87,13 @@ model.add(Dropout(.5))
 model.add(Dense(24))
 model.add(Activation('softmax'))
 
-# construct neural network with above properties
 model.compile(loss='categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
 
 ##############################################
+
+model.summary()
 
 # train model on training data
 model.fit(
@@ -108,8 +102,6 @@ model.fit(
     epochs=epochs,
     batch_size=batch_size
 )
-
-model.summary()
 
 # test model on testing data
 score = model.evaluate(X_test, y_test, batch_size=batch_size)
