@@ -15,8 +15,8 @@ data_gen = ImageDataGenerator(
                               zoom_range=.05
                               )
 
-data_flow = data_gen.flow_from_directory(directory='D:\\Trevor\\Documents\\_Code\\Python\\Machine Learning\\Sign Language\\SignLanguageProject\\data\\classified\\train',
-                                         save_to_dir='D:\\Trevor\\Documents\\_Code\\Python\\Machine Learning\\Sign Language\\SignLanguageProject\\data\\dekart\\trial_gen',
+data_flow = data_gen.flow_from_directory(directory='data\\classified\\train',
+                                         save_to_dir='data\\dekart\\trial_gen',
                                          target_size=(150, 150),
                                          batch_size=60,
                                          shuffle=False,
